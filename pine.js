@@ -1,5 +1,5 @@
 
-/*jshint maxlen:120, curly:false*/
+/* jshint maxlen: 120, curly: false, boss: true */
 
 var define, require;
 
@@ -15,30 +15,26 @@ var define, require;
     };
 
     require = function (id) {
-        return callDep(id);
-    };
-
-    function callDep (id) {
         if (hasProp(defined, id))
             return defined[id];
 
-        if (hasProp(waiting, id))
-            return main.apply(undefined, waiting[id]);
+        if (hasProp(waiting, id)) {
+            delete waiting[id];
+            return defined[id] = main.apply(undefined, waiting[id]);
+        }
 
         throw new Error('No ' + id);
-    }
+    };
 
     function main (id, dependencies, factory) {
         var deps = [],
             module, i, length;
 
         for (i = 0, length = dependencies.length; i < length; i++)
-            deps.push(callDep(dependencies[i]));
+            deps.push(require(dependencies[i]));
 
-        // context should be defined[id]? (so we have a context?) seems like it in almond.js
-        module = (typeof factory === 'function') ? factory.apply(undefined, deps) : factory;
-
-        return defined[id] = module;
+        // FIXME: context should be defined[id]? seems like it in almond.js
+        return (typeof factory === 'function') ? factory.apply(undefined, deps) : factory;
     }
 
     function hasProp (obj, prop) {
