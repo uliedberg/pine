@@ -1,39 +1,3 @@
-/**
- * Subset of AMD API implementation to use for specific cases after optimized builds. YMMV.
- *
- * Borrowing freely from almond: https://github.com/jrburke/almond .
- *
- * API spec:
- * https://github.com/amdjs/amdjs-api/wiki/AMD
- *
- * Exposes
- * - define(id, dependencies, factory)
- * - require(id)
- *
- * Loading/execution of modules is deferred until required via the
- * top level require that kickstarts the dependency chain.
- *
- * ## does not
- * - support loader plugins
- * - support relative paths
- * - support special dependencies (i.e.  "require", "exports", or "module")
- * - support circular dependencies
- *
- * ## demands
- * - a single concatenated file with itself before the first define
- * - a top level require to the inital id after the last define
- * - all arguments are given to define (r.js fixes this nicely)
- *
- * Using hasOwnProperty to make sure we don't give back strange stuff
- * put in the Object prototype.
- *
- * NB: waiting props are not deleted after being defined; this should
- * not be a concern (?)
- *
- * NB: when running r.js the only call to be "able" to produce an error should
- * be the intial (r.js does not know of it if put there in wrap)
- *
-**/
 
 /*jshint maxlen:120, curly:false*/
 
